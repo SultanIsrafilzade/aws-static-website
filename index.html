@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Static Website on AWS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to My AWS Static Website</h1>
+        <p>Hosted on S3 + CloudFront</p>
+    </header>
+    
+    <main>
+        <section class="info">
+            <h2>About This Project</h2>
+            <p>This website is hosted on Amazon S3 and distributed globally via CloudFront CDN.</p>
+            <p>It's automatically deployed using GitHub Actions CI/CD pipeline.</p>
+        </section>
+        
+        <section class="features">
+            <h2>Architecture Features</h2>
+            <ul>
+                <li>✅ Serverless - No EC2 instances to manage</li>
+                <li>✅ Global CDN - Fast loading from anywhere</li>
+                <li>✅ HTTPS - Secure with SSL certificate</li>
+                <li>✅ Automated - Push to GitHub and it deploys</li>
+                <li>✅ Cost-effective - ~$1-5/month</li>
+            </ul>
+        </section>
+        
+        <section class="tech">
+            <h2>Technologies Used</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h3>AAHHAHAHAHAAmazon S3</h3>
+                    <p>Static file hosting</p>
+                </div>
+                <div class="tech-card">
+                    <h3>CloudFront</h3>
+                    <p>Global CDN</p>
+                </div>
+                <div class="tech-card">
+                    <h3>GitHub Actions</h3>
+                    <p>CI/CD Pipeline</p>
+                </div>
+                <div class="tech-card">
+                    <h3>Route53</h3>
+                    <p>DNS Management</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>Built by [Your Name] | DevOps Learning Project</p>
+        <p id="timestamp"></p>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
