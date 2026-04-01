@@ -1,0 +1,86 @@
+name: Deploy to S3 and CloudFront
+
+# Trigger: Run this workflow when code is pushed to main branch
+on:
+  push:
+    branches:
+      - main
+
+# Environment variables available to all jobs
+env:
+  AWS_REGION: eu-north-1-an  # Change to your region
+
+# Jobs to run
+jobs:
+  deploy:
+    name: Deploy website
+    runs-on: ubuntu-latest  # GitHub-provided Linux runner
+
+    steps:
+      # Step 1: Download code from repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Configure AWS credentials from secrets
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Step 3: Sync files to S3 bucket
+      - name: Sync files to S3
+        run: |
+          aws s3 sync . s3://${{ secrets.AWS_S3_BUCKET }} \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude "*.md" \
+            --delete
+      
+      # Explanation of sync command:
+      # aws s3 sync . s3://BUCKET - Upload current directory to S3
+      # --exclude ".git/*" - Don't upload Git files
+      # --exclude ".github/*" - Don't upload workflow files
+      # --exclude "*.md" - Don't upload README files
+      # --delete - Remove files from S3 that don't exist locally
+
+      # Step 4: Invalidate CloudFront cache
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+      
+      # Explanation:
+      # --paths "/*" - Invalidate all files (force CloudFront to fetch fresh copies)
+
+      # Step 5: Print success message
+      - name: Deployment complete
+        run: echo "✅ Website deployed successfully!"
+
+**What this workflow does (step by step):**
+
+1. **Triggers:** When you `git push` to `main` branch
+2. **Checks out code:** Downloads your repository files
+3. **Configures AWS:** Uses secrets to authenticate
+4. **Syncs to S3:** Uploads all files to bucket (only changed files, efficient)
+5. **Invalidates CloudFront:** Clears cache so users see new version
+6. **Reports success:** Shows completion message
+
+**Customize for your region:**
+
+6. Line 11: Change `AWS_REGION: us-east-1` to your region if different
+
+7. **Save file**
+
+**Your folder structure now:**
+```
+static-website-project3/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+├── index.html
+├── style.css
+├── script.js
+└── error.html
